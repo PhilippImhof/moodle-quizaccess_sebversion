@@ -128,4 +128,82 @@ final class backup_restore_test extends \advanced_testcase {
         $data = $DB->get_record('quizaccess_sebversion', ['quizid' => $quiz->instance]);
         self::assertEquals($expected, $data->enforceversion);
     }
+
+    /**
+     * Test that when restoring a quiz that was created before the installation of this plugin,
+     * the setting will remain OFF, regardless of the default setting in the admin panel.
+     */
+    public function test_restoring_old_quiz(): void {
+        global $DB, $USER;
+
+        // Login as admin user.
+        $this->resetAfterTest(true);
+        $this->setAdminUser();
+
+        // Set our default
+        set_config('enforcedefault', '1', 'quizaccess_sebversion');
+
+        // Create a course and a quiz.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $quiz = quizaccess_sebversion_test_helper::create_test_quiz($course, null);
+
+        // Backup course. By using MODE_IMPORT, we avoid the backup being zipped.
+        $bc = new backup_controller(
+            backup::TYPE_1COURSE,
+            $course->id,
+            backup::FORMAT_MOODLE,
+            backup::INTERACTIVE_NO,
+            backup::MODE_IMPORT,
+            $USER->id,
+        );
+        $backupid = $bc->get_backupid();
+        $bc->execute_plan();
+        $bc->destroy();
+
+        // Delete our setting from the backup file.
+        $xmlfile = $bc->get_plan()->get_basepath() . "/activities/quiz_{$quiz->cmid}/quiz.xml";
+        $xml = file_get_contents($xmlfile);
+        $xml = preg_replace(
+            '#<quizaccess_sebversion>\s*<enforceversion>(1|0)</enforceversion>\s*</quizaccess_sebversion>#',
+            '',
+            $xml,
+        );
+        file_put_contents($xmlfile, $xml);
+
+        // Delete the current course to make sure there is no data.
+        delete_course($course, false);
+
+        // Our setting must not be in the quiz' XML file anymore.
+        $xml = file_get_contents($xmlfile);
+        $matches = [];
+        preg_match(
+            '#<quizaccess_sebversion>\s*<enforceversion>(1|0)</enforceversion>\s*</quizaccess_sebversion>#',
+            $xml,
+            $matches,
+        );
+        self::assertEmpty($matches);
+
+        // Create a new course and restore the backup.
+        $newcourse = $generator->create_course();
+        $rc = new restore_controller(
+            $backupid,
+            $newcourse->id,
+            backup::INTERACTIVE_NO,
+            backup::MODE_IMPORT,
+            $USER->id,
+            backup::TARGET_NEW_COURSE,
+        );
+        $rc->execute_precheck();
+        $rc->execute_plan();
+        $rc->destroy();
+
+        // Fetch the quiz ID.
+        $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
+        $quiz = reset($modules);
+
+        // There should be no record in the DB for this quiz, because the setting has not been made.
+        $data = $DB->get_record('quizaccess_sebversion', ['quizid' => $quiz->instance]);
+        self::assertFalse($data);
+    }
 }
