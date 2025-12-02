@@ -140,7 +140,7 @@ final class backup_restore_test extends \advanced_testcase {
         $this->resetAfterTest(true);
         $this->setAdminUser();
 
-        // Set our default
+        // Set our default.
         set_config('enforcedefault', '1', 'quizaccess_sebversion');
 
         // Create a course and a quiz.
