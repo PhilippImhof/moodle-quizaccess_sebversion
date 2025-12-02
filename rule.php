@@ -77,6 +77,10 @@ class quizaccess_sebversion extends access_rule_base {
 
     #[\Override]
     public function setup_attempt_page($page) {
+        // Reviews can be done without the Safe Exam Browser, so leave.
+        if ($page->pagetype === 'mod-quiz-review') {
+            return;
+        }
         // Our main work is done client-side, so let's initialize our module.
         $page->requires->js_call_amd(
             'quizaccess_sebversion/overlay',
