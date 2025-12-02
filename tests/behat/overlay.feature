@@ -57,8 +57,21 @@ Feature: Test the modal overlay
     And the focused element is "" "quizaccess_sebversion > modal overlay"
     And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay
 
+  Scenario: Test with simulated older SEB on iOS
+    Given I simulate Safe Exam Browser version "Safe Exam Browser_iOS_3.5_15487_org.safeexambrowser.SafeExamBrowser" for the sebversion quizaccess plugin
+    When I press "Attempt quiz"
+    Then I should see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
+    And the focused element is "" "quizaccess_sebversion > modal overlay"
+    And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay
+
   Scenario: Test with simulated matching SEB on Mac
     Given I simulate Safe Exam Browser version "Safe Exam Browser_macOS_3.6_156D0_org.safeexambrowser.SafeExamBrowser" for the sebversion quizaccess plugin
+    When I press "Attempt quiz"
+    Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
+    And "" "quizaccess_sebversion > modal overlay" should not exist
+
+  Scenario: Test with simulated matching SEB on iOS
+    Given I simulate Safe Exam Browser version "Safe Exam Browser_iOS_3.6_156D0_org.safeexambrowser.SafeExamBrowser" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
     Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
     And "" "quizaccess_sebversion > modal overlay" should not exist

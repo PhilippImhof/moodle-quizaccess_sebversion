@@ -71,13 +71,15 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
 
     // The version string has the following format, depending on the platform:
     // - Safe Exam Browser_macOS_3.5_15487_org.safeexambrowser.SafeExamBrowser
+    // - Safe Exam Browser_iOS_3.5_15487_org.safeexambrowser.SafeExamBrowser
     // - SEB_Windows_3.9.0.787
     // The formats can be found in the SafeExamBrowser GitHub repositories:
     // -> seb-mac/Classes/BrowserComponents/SEBBrowserController.m --> look for appVersion
+    // -> seb-mac/SEB/SEBViewController.m --> look for appVersion (iOS)
     // -> seb-win-refactoring/SafeExamBrowser.Browser/Content/Api.js
     // If the string does not match either of these formats, something could be
     // wrong, e. g. it could be a custom build.
-    if (versionString.includes('macOS')) {
+    if (versionString.includes('macOS') || versionString.includes('iOS')) {
         overlayNeeded = !checkMacVersion(versionString, minVersionMac);
         targetVersion = minVersionMac;
     } else if (versionString.includes('Windows')) {
@@ -85,7 +87,6 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
         targetVersion = minVersionWin;
     } else {
         overlayNeeded = true;
-        targetVersion = '';
     }
 
     if (overlayNeeded) {
@@ -104,6 +105,7 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
 const checkMacVersion = (versionString, minVersion) => {
     // The version string on Mac must have exactly five parts. The third part will be the
     // version number, e. g. Safe Exam Browser_macOS_3.5_15487_org.safeexambrowser.SafeExamBrowser
+    // or Safe Exam Browser_iOS_3.5_15487_org.safeexambrowser.SafeExamBrowser
     const parts = versionString.split('_');
     if (parts.length !== 5) {
         return false;
