@@ -63,6 +63,29 @@ class behat_quizaccess_sebversion extends behat_base {
     }
 
     /**
+     * Wait some time before creating a global SafeExamBrowser object to simulate an SEB instance. Also, save
+     * the version string to the local storage where the client's Javascript can then recreate the SafeExamBrowser
+     * object once the next page is loaded. When using the special string "no SEB" as the version, the Javascript
+     * will know that it should not create the global object and thus not simulate SEB.
+     *
+     * @Given /^I wait "(?P<seconds>\d+)" seconds before simulating Safe Exam Browser version "(?P<version>[A-Za-z0-9._ ]+)" for the sebversion quizaccess plugin$/
+     *
+     * @param int $seconds delay in seconds
+     * @param string $version simulated version string, or "no SEB"
+     */
+    public function i_wait_seconds_before_simulating_safe_exam_browser_version_for_quizaccess_sebversion_plugin(int $seconds, string $version): void {
+        $this->execute_script(
+            "localStorage.setItem('quizaccess_sebversion_delay', '$seconds')"
+        );
+        $this->execute_script(
+            "setTimeout(() => { localStorage.setItem('quizaccess_sebversion_versionString', '$version'); }, $seconds * 1000)"
+        );
+        $this->execute_script(
+            "setTimeout(() => { window.SafeExamBrowser = {'version': '{$version}'}; }, $seconds * 1000)"
+        );
+    }
+
+    /**
      * Verify that a certain element on the page cannot be clicked, because it is covered by our
      * plugin's modal overlay.
      *
