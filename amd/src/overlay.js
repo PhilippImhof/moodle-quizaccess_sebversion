@@ -87,7 +87,7 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
     }
 
     // Fetch the version string from the SafeExamBrowser object, as described above.
-    const SEB = fetchSEBObject();
+    const SEB = await fetchSEBObject();
     const versionString = SEB?.version ?? '';
 
     // By default, we assume that the overlay will be needed.
