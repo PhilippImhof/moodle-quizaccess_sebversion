@@ -37,14 +37,16 @@ Feature: Test dealing with delayed availability of the SEB object
     And I follow "Quiz 1"
 
   Scenario: Test a valid version with a short delay
-    Given I wait "10" seconds before simulating Safe Exam Browser version "SEB_Windows_3.10.1.xxx" for the sebversion quizaccess plugin
+    Given I wait "9" seconds before simulating Safe Exam Browser version "SEB_Windows_3.10.1.xxx" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
+    And I wait "15" seconds
     Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
     And "" "quizaccess_sebversion > modal overlay" should not exist
 
   Scenario: Test an outdated version with a short delay
-    Given I wait "10" seconds before simulating Safe Exam Browser version "SEB_Windows_3.9.0.787" for the sebversion quizaccess plugin
+    Given I wait "9" seconds before simulating Safe Exam Browser version "SEB_Windows_3.9.0.787" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
+    And I wait "12" seconds
     Then I should see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.10.0."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
     And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay
@@ -54,7 +56,7 @@ Feature: Test dealing with delayed availability of the SEB object
     When I press "Attempt quiz"
     Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
     And "" "quizaccess_sebversion > modal overlay" should not exist
-    When I wait "7" seconds
+    When I wait "12" seconds
     Then I should see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.10.0."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
     And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay
@@ -64,7 +66,7 @@ Feature: Test dealing with delayed availability of the SEB object
     When I press "Attempt quiz"
     Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.6.0."
     And "" "quizaccess_sebversion > modal overlay" should not exist
-    When I wait "7" seconds
+    When I wait "12" seconds
     Then I should see "The version of your Safe Exam Browser could not be determined. Wait a few seconds and try to reload the page. If this does not solve the problem, please install the most recent official version and try again."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
     And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay

@@ -127,7 +127,7 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
  * @returns Object|undefined
  */
 const fetchSEBObject = async() => {
-    for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
         // If the SafeExamBrowser object is ready, return it.
         if (window.SafeExamBrowser !== undefined) {
             return window.SafeExamBrowser;
