@@ -54,6 +54,7 @@ const MAX_RETRIES = 5;
  * @param {boolean} behat wheter we are currently in a Behat acceptance test.
  */
 export const init = async(minVersionWin, minVersionMac, behat) => {
+    //window.console.log('init', new Date());
     // Inside Safe Exam Browser, there is a global SafeExamBrowser object with, among others,
     // a version attribute. The object is not normally available in other browsers. As acceptance
     // tests use regular browsers, we will have to simulate being in Safe Exam Browser. The
@@ -64,21 +65,26 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
     if (behat) {
         const simulatedVersion = localStorage.getItem('quizaccess_sebversion_versionString');
         const delay = localStorage.getItem('quizaccess_sebversion_delay');
+        //const simulatedVersion = 'SEB_Windows_3.9.0.787';
+        //const delay = '15';
         const simulatedSEBObject = {'version': simulatedVersion};
+        //window.console.log(delay);
 
         if (simulatedVersion !== 'no SEB') {
             // The behat test might simulate a delay before making the SEB object available, something
             // that happens in certain versions of SEB. So we either create the object right away or
             // wait for the requested number of seconds.
             if (delay !== null) {
-                window.SafeExamBrowser = simulatedSEBObject;
-            } else {
                 setTimeout(
                     () => {
                         window.SafeExamBrowser = simulatedSEBObject;
+                        //window.console.log('SEB set (deferred) to', window.SafeExamBrowser, simulatedSEBObject, new Date());
                     },
                     delay * 1000
                 );
+            } else {
+                window.SafeExamBrowser = simulatedSEBObject;
+                //window.console.log('SEB immediately set to', window.SafeExamBrowser, simulatedSEBObject, new Date());
             }
         }
 
@@ -89,6 +95,7 @@ export const init = async(minVersionWin, minVersionMac, behat) => {
     // Fetch the version string from the SafeExamBrowser object, as described above.
     const SEB = await fetchSEBObject();
     const versionString = SEB?.version ?? '';
+    //window.console.log('fetched object', versionString, SEB, new Date());
 
     // By default, we assume that the overlay will be needed.
     let overlayNeeded = true;
