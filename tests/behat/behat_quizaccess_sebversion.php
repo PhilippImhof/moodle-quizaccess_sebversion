@@ -80,7 +80,7 @@ class behat_quizaccess_sebversion extends behat_base {
             "localStorage.setItem('quizaccess_sebversion_delay', '$seconds')"
         );
         $this->execute_script(
-            "setTimeout(() => { localStorage.setItem('quizaccess_sebversion_versionString', '$version'); }, $seconds * 1000)"
+            "localStorage.setItem('quizaccess_sebversion_versionString', '$version');"
         );
         $this->execute_script(
             "setTimeout(() => { window.SafeExamBrowser = {'version': '{$version}'}; }, $seconds * 1000)"
