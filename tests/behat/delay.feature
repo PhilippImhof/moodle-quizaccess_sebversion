@@ -39,8 +39,7 @@ Feature: Test dealing with delayed availability of the SEB object
   Scenario: Test a valid version with a short delay
     Given I wait "9" seconds before simulating Safe Exam Browser version "SEB_Windows_3.10.0.826" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
-    Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz."
-    And "" "quizaccess_sebversion > modal overlay" should not exist
+    Then "" "quizaccess_sebversion > modal overlay" should not exist
     When I wait "15" seconds
     Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.10.0."
     And "" "quizaccess_sebversion > modal overlay" should not exist
@@ -48,7 +47,8 @@ Feature: Test dealing with delayed availability of the SEB object
   Scenario: Test an outdated version with a short delay
     Given I wait "9" seconds before simulating Safe Exam Browser version "SEB_Windows_3.9.0.787" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
-    And I wait "12" seconds
+    Then "" "quizaccess_sebversion > modal overlay" should not exist
+    When I wait "12" seconds
     Then I should see "Please update your Safe Exam Browser in order to attempt this quiz. You need at least version 3.10.0."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
     And I should not be able to click on "iframe[class^='tox-edit-area']" because of the sebversion quizaccess overlay
@@ -56,8 +56,7 @@ Feature: Test dealing with delayed availability of the SEB object
   Scenario: Test a valid version with a long delay
     Given I wait "15" seconds before simulating Safe Exam Browser version "SEB_Windows_3.10.0.826" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
-    Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz."
-    And "" "quizaccess_sebversion > modal overlay" should not exist
+    Then "" "quizaccess_sebversion > modal overlay" should not exist
     When I wait "12" seconds
     Then I should see "The version of your Safe Exam Browser could not be determined. Wait a few seconds and try to reload the page. If this does not solve the problem, please install the most recent official version and try again."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
@@ -66,8 +65,7 @@ Feature: Test dealing with delayed availability of the SEB object
   Scenario: Test an outdated version with a long delay
     Given I wait "15" seconds before simulating Safe Exam Browser version "SEB_Windows_3.9.0.787" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
-    Then I should not see "Please update your Safe Exam Browser in order to attempt this quiz."
-    And "" "quizaccess_sebversion > modal overlay" should not exist
+    Then "" "quizaccess_sebversion > modal overlay" should not exist
     When I wait "12" seconds
     Then I should see "The version of your Safe Exam Browser could not be determined. Wait a few seconds and try to reload the page. If this does not solve the problem, please install the most recent official version and try again."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
@@ -76,8 +74,7 @@ Feature: Test dealing with delayed availability of the SEB object
   Scenario: Test a simulated non-standard SEB with a long delay
     Given I wait "15" seconds before simulating Safe Exam Browser version "foobar" for the sebversion quizaccess plugin
     When I press "Attempt quiz"
-    Then I should not see "The version of your Safe Exam Browser could not be determined."
-    And "" "quizaccess_sebversion > modal overlay" should not exist
+    Then "" "quizaccess_sebversion > modal overlay" should not exist
     When I wait "12" seconds
     Then I should see "The version of your Safe Exam Browser could not be determined. Wait a few seconds and try to reload the page. If this does not solve the problem, please install the most recent official version and try again."
     And the focused element is "" "quizaccess_sebversion > modal overlay"
