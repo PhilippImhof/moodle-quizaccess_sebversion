@@ -57,9 +57,6 @@ class behat_quizaccess_sebversion extends behat_base {
         $this->execute_script(
             "localStorage.setItem('quizaccess_sebversion_versionString', '$version')"
         );
-        $this->execute_script(
-            "window.SafeExamBrowser = { 'version': '{$version}' }"
-        );
     }
 
     // phpcs:disable moodle.Files.LineLength.TooLong
@@ -81,9 +78,6 @@ class behat_quizaccess_sebversion extends behat_base {
         );
         $this->execute_script(
             "localStorage.setItem('quizaccess_sebversion_versionString', '$version');"
-        );
-        $this->execute_script(
-            "setTimeout(() => { window.SafeExamBrowser = {'version': '{$version}'}; }, $seconds * 1000)"
         );
     }
     // phpcs:enable moodle.Files.LineLength.TooLong
